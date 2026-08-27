@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الرئيسية</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+        }
+        .navbar {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 30px;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            font-size: 24px;
+        }
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin-left: 20px;
+            font-weight: 600;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        .hero {
+            background: white;
+            padding: 50px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 42px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .hero p {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 30px;
+        }
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 14px 35px;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .btn-secondary {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+        .user-box {
+            background: #e8f0fe;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+        .user-box a {
+            display: inline-block;
+            margin: 0 10px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+        .feature {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .feature .icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+        .feature h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .feature p {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>🚀 منصة CV</h1>
+        <div>
+            {% if user.is_authenticated %}
+                <span>مرحباً {{ user.first_name }}</span>
+                <a href="{% url 'dashboard:home' %}">لوحة التحكم</a>
+                <a href="{% url 'accounts:logout' %}">تسجيل خروج</a>
+            {% else %}
+                <a href="{% url 'accounts:login' %}">تسجيل دخول</a>
+                <a href="{% url 'accounts:register' %}">إنشاء حساب</a>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="hero">
+            <h1>🌟 منصة إدارة السير الذاتية</h1>
+            <p>قم برفع سيرتك الذاتية، وتواصل معنا، وتابع حالة طلبك</p>
+            
+            {% if user.is_authenticated %}
+                <div class="user-box">
+                    <p style="font-size: 18px;">👋 مرحباً {{ user.first_name }} {{ user.last_name }}</p>
+                    <div class="buttons">
+                        <a href="{% url 'dashboard:home' %}" class="btn btn-primary">📊 لوحة التحكم</a>
+                        <a href="{% url 'dashboard:submit_cv' %}" class="btn btn-primary">📄 رفع السيرة الذاتية</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="buttons">
+                    <a href="{% url 'accounts:login' %}" class="btn btn-primary">🔐 تسجيل دخول</a>
+                    <a href="{% url 'accounts:register' %}" class="btn btn-secondary">📝 إنشاء حساب</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="icon">📄</div>
+                <h3>رفع السيرة الذاتية</h3>
+                <p>قم برفع ملف PDF الخاص بسيرتك الذاتية</p>
+            </div>
+            <div class="feature">
+                <div class="icon">📩</div>
+                <h3>تواصل معنا</h3>
+                <p>أرسل رسالة للدعم أو الاستفسار</p>
+            </div>
+            <div class="feature">
+                <div class="icon">📊</div>
+                <h3>تتبع الطلبات</h3>
+                <p>تابع حالة طلبك في أي وقت</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
