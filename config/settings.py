@@ -23,10 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-djh=z3acs$kha_66sb%c6eczudg)2dlrep2tcstt$_^l2dma(0'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -158,3 +157,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # الملفات المرفوعة (Media Files) - نستعمل Cloudinary أو التخزين المحلي
 # حالياً خليها SQLite للميديا
+# CSRF Settings
+CSRF_TRUSTED_ORIGINS = [
+    'https://project-cv-quiet-frost-7250.fly.dev',
+    'https://*.fly.dev',
+]
