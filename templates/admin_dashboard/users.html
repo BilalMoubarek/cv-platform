@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>المستخدمين</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 10px; background: #f8f9fa; }
+        td { padding: 10px; border-bottom: 1px solid #e9ecef; }
+        .badge { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge.active { background: #d4edda; color: #155724; }
+        .badge.inactive { background: #f8d7da; color: #721c24; }
+        .back { display: inline-block; margin: 20px 0; color: #667eea; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>👥 المستخدمين</h1>
+        <div>
+            <a href="{% url 'admin_dashboard:dashboard' %}">الرئيسية</a>
+            <a href="{% url 'admin_dashboard:messages' %}">الرسائل</a>
+            <a href="{% url 'admin_dashboard:cvs' %}">السير الذاتية</a>
+            <a href="/admin/">🔒 Admin</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>جميع المستخدمين ({{ users.count }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الإيميل</th>
+                        <th>الاسم</th>
+                        <th>رقم الهاتف</th>
+                        <th>تاريخ التسجيل</th>
+                        <th>الحالة</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.phone_number|default:"-" }}</td>
+                        <td>{{ user.date_joined|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge {% if user.is_active %}active{% else %}inactive{% endif %}">
+                                {% if user.is_active %}نشط{% else %}غير نشط{% endif %}
+                            </span>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" style="text-align:center;color:#999;">لا يوجد مستخدمين</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'admin_dashboard:dashboard' %}" class="back">← العودة للرئيسية</a>
+        </div>
+    </div>
+</body>
+</html>

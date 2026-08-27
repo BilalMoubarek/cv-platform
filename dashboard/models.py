@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class ContactMessage(models.Model):
     """نموذج الرسائل من الزوار"""
@@ -46,11 +48,55 @@ class CVSubmission(models.Model):
         return f"{self.full_name} - {self.status}"
     
     def approve(self):
+        from django.utils import timezone
         self.status = 'approved'
-        self.reviewed_at = models.DateTimeField(auto_now=True)
+        self.reviewed_at = timezone.now()
         self.save()
     
     def reject(self):
+        from django.utils import timezone
         self.status = 'rejected'
-        self.reviewed_at = models.DateTimeField(auto_now=True)
+        self.reviewed_at = timezone.now()
         self.save()
+
+# ============ SIGNALS ============
+# هاد الإشارات كاتنشئ إشعارات للمشرف عند إضافة بيانات جديدة
+
+@receiver(post_save, sender=ContactMessage)
+def create_message_notification(sender, instance, created, **kwargs):
+    if created:
+        try:
+            from admin_dashboard.models import AdminNotification
+            AdminNotification.objects.create(
+                type='new_message',
+                message=f'رسالة جديدة من {instance.name}',
+                link='/admin-dashboard/messages/'
+            )
+        except:
+            pass  # إذا مازال تطبيق admin_dashboard ما تثبتش
+
+@receiver(post_save, sender=CVSubmission)
+def create_cv_notification(sender, instance, created, **kwargs):
+    if created:
+        try:
+            from admin_dashboard.models import AdminNotification
+            AdminNotification.objects.create(
+                type='new_cv',
+                message=f'سيرة ذاتية جديدة من {instance.full_name}',
+                link='/admin-dashboard/cvs/'
+            )
+        except:
+            pass  # إذا مازال تطبيق admin_dashboard ما تثبتش
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_user_notification(sender, instance, created, **kwargs):
+    if created:
+        try:
+            from admin_dashboard.models import AdminNotification
+            AdminNotification.objects.create(
+                type='new_user',
+                message=f'مستخدم جديد: {instance.email}',
+                link='/admin-dashboard/users/'
+            )
+        except:
+            pass  # إذا مازال تطبيق admin_dashboard ما تثبتش

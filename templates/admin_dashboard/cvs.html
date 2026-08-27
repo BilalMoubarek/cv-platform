@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>السير الذاتية</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; }
+        .navbar { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar a { color: white; text-decoration: none; margin-left: 20px; }
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 25px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.08); }
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; padding: 10px; background: #f8f9fa; }
+        td { padding: 10px; border-bottom: 1px solid #e9ecef; }
+        .badge { padding: 3px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+        .badge.pending { background: #fff3cd; color: #856404; }
+        .badge.approved { background: #d4edda; color: #155724; }
+        .badge.rejected { background: #f8d7da; color: #721c24; }
+        .back { display: inline-block; margin: 20px 0; color: #667eea; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📄 السير الذاتية</h1>
+        <div>
+            <a href="{% url 'admin_dashboard:dashboard' %}">الرئيسية</a>
+            <a href="{% url 'admin_dashboard:users' %}">المستخدمين</a>
+            <a href="{% url 'admin_dashboard:messages' %}">الرسائل</a>
+        </div>
+    </div>
+    <div class="container">
+        <div class="card">
+            <h2>جميع السير الذاتية ({{ cvs.count }})</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>الاسم</th>
+                        <th>الإيميل</th>
+                        <th>الهاتف</th>
+                        <th>التاريخ</th>
+                        <th>الحالة</th>
+                        <th>الملف</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cv in cvs %}
+                    <tr>
+                        <td>{{ cv.full_name }}</td>
+                        <td>{{ cv.email }}</td>
+                        <td>{{ cv.phone }}</td>
+                        <td>{{ cv.submitted_at|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            <span class="badge {{ cv.status }}">
+                                {% if cv.status == 'pending' %}⏳ في انتظار
+                                {% elif cv.status == 'approved' %}✅ موافقة
+                                {% elif cv.status == 'rejected' %}❌ مرفوض
+                                {% endif %}
+                            </span>
+                        </td>
+                        <td>
+                            {% if cv.cv_file %}
+                            <a href="{{ cv.cv_file.url }}" target="_blank">📎 تحميل</a>
+                            {% else %}
+                            -
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6" style="text-align:center;color:#999;">لا توجد سير ذاتية</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <a href="{% url 'admin_dashboard:dashboard' %}" class="back">← العودة للرئيسية</a>
+        </div>
+    </div>
+</body>
+</html>

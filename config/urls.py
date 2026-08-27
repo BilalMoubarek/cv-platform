@@ -8,6 +8,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('', include('core.urls')),
     path('dashboard/', include('dashboard.urls')),
+    path('admin-dashboard/', include('admin_dashboard.urls')),  # ضيف هاد
 ]
 
 if settings.DEBUG:

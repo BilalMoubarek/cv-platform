@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
-    # تطبيقاتنا
+
     'accounts',
     'core',
     'dashboard',
+    'admin_dashboard',  # ضيف هاد
 ]
 
 MIDDLEWARE = [
@@ -140,3 +140,21 @@ MEDIA_ROOT = BASE_DIR / 'media'
 ADMIN_SITE_HEADER = "🚀 منصة CV - لوحة التحكم"
 ADMIN_SITE_TITLE = "منصة CV"
 ADMIN_INDEX_TITLE = "📊 مرحباً بك في لوحة التحكم"
+# إعدادات النشر على Render
+import os
+import dj_database_url
+
+# السماح بـ Render
+ALLOWED_HOSTS = ['*']  # مؤقتاً
+
+# قاعدة البيانات (نستعمل PostgreSQL فـ Render)
+DATABASES = {
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+}
+
+# الملفات الثابتة (Static Files)
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# الملفات المرفوعة (Media Files) - نستعمل Cloudinary أو التخزين المحلي
+# حالياً خليها SQLite للميديا
